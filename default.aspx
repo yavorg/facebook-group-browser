@@ -1,6 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Facebook Group Wall Browser</title>
@@ -12,7 +10,7 @@
   // Additional JS functions here
   window.fbAsyncInit = function() {
     FB.init({
-      appId      : '<%$appSettings:appId %>', // App ID
+      appId      : '@System.Configuration.ConfigurationManager.AppSettings["appId"]', // App ID
       channelUrl : '//channel.html', // Channel File
       status     : true, // check login status
       cookie     : true, // enable cookies to allow the server to access the session
