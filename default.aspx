@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<%@ Page Language="C#" AutoEventWireup="true" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Facebook Group Wall Browser</title>
@@ -74,7 +76,7 @@
   Learn more about options for the login button plugin:
   /docs/reference/plugins/login/ -->
 
-<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>	
+<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>  
 <label for="groupId">Facebook Group ID</label>
 <input type="text" id="groupId" value="9973986703" />
 <br />
