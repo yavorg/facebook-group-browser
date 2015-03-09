@@ -4,6 +4,9 @@
 <head>
     <title>Facebook Post Browser</title>
     <script src="//ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.1.min.js"></script>
+    <meta name="description" content="Facebook Post Browser enables you to browse and bulk download Facebook posts for offline access. It currently supports posts created on Facebook Pages and Groups, and allows you to specify a date range of posts to load." />
+    <meta name="keywords" content="facebook, facebook posts, facebook groups, facebook pages, 
+    facebook export, facebook download, facebook save, facebook research, facebook browse, facebook post export, facebook post save, facebook post download" /> 
 </head>
 <body>
 <div id="fb-root"></div>
@@ -19,6 +22,7 @@
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
       testAPI();
+      enableControls();
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -92,28 +96,31 @@
   the FB.login() function when clicked.
 -->
 
+<h1>Facebook Post Browser</h1>
+<p>This tool enables you to browse and bulk download Facebook posts for offline access. It currently supports posts created on Facebook Pages and Groups, and allows you to specify a date range of posts to load. <strong>Please log in with your Facebook account by pressing the button below to get started.</strong></p>
 <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="true" data-auto-logout-link="false" scope="user_groups" onlogin="checkLoginState();"></div>
-
 <br /> 
-<label for="objectType">Facebook Group or Page</label>
-<select id="objectType">
-    <option value="group">Group</option>
-    <option value="page">Page</option>
-</select>
-<br/>
-<label for="objectName">Name</label>
-<input type="text" id="objectName" value="شباب 6 ابريل .. APRIL 6 YOUTH MOVEMENT" />
-<br />
-<label for="startDate">Start date (UTC time)</label>
-<input type="text" id="startDate" value="Jan 1, 2008" />
-<br />
-<label for="endDate">End date (UTC time)</label>
-<input type="text" id="endDate" value="Mar 25, 2008" />
-<br />
-<label for="numPosts">Number of posts</label>
-<input type="text" id="numPosts" value="1000" />
-<br />
-<input type="button" id="submit" value="Submit"/>
+<fieldset id="controls">
+  <label for="objectType">Facebook Group or Page</label>
+  <select id="objectType" disabled="disabled">
+      <option value="group">Group</option>
+      <option value="page">Page</option>
+  </select>
+  <br/>
+  <label for="objectName">Name</label>
+  <input type="text" id="objectName" value="شباب 6 ابريل .. APRIL 6 YOUTH MOVEMENT" disabled="disabled"/>
+  <br />
+  <label for="startDate">Start date (UTC time)</label>
+  <input type="text" id="startDate" value="Jan 1, 2008" disabled="disabled"/>
+  <br />
+  <label for="endDate">End date (UTC time)</label>
+  <input type="text" id="endDate" value="Mar 25, 2008" disabled="disabled" />
+  <br />
+  <label for="numPosts">Number of posts</label>
+  <input type="text" id="numPosts" value="1000" disabled="disabled" />
+  <br />
+  <input type="button" id="submit" value="Submit" disabled="disabled"/>
+</fieldset>
 <p>Looking at <span id="resultCount">0</span> results</p>
 <ul id="posts">
 </ul>
@@ -132,6 +139,10 @@
           })
         });
     });
+
+    function enableControls(){
+      $("#controls input, select").removeAttr("disabled");
+    }
 
     function loadObjectId(name, callback) {
         FB.api('/search?type=' + objectType + '&q=' + encodeURIComponent(name),
