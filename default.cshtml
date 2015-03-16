@@ -16,7 +16,7 @@
 <script src="js/fb.js" type="text/javascript"></script>
 
 <h1>Facebook Post Browser</h1>
-<p>This tool enables you to browse and bulk download Facebook posts for offline access. It currently supports posts created on Facebook Pages and Groups, and allows you to specify a date range of posts to load. <strong>Please log in with your Facebook account by pressing the button below to get started.</strong></p>
+<p>This tool enables you to browse and bulk download Facebook posts for offline access. It currently supports posts created on Facebook Pages and Groups, and allows you to specify a date range of posts to load. <strong>Please log in with your Facebook account by pressing the button below to get started.</strong> If you have any feedback, feature requests, or bug reports, please let us know <a href="https://feedback.userreport.com/70c370b6-b5ff-4f84-acba-843ab7f16160/" target="_blank">in our forum over here</a>.</p>
 <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="true" data-auto-logout-link="false" scope="user_groups" onlogin="checkLoginState();"></div>
 <br /> 
 <fieldset id="controls">
@@ -97,6 +97,16 @@
       $("body").css("cursor", "default"); 
     }
 
+</script>
+<!-- UserReport stuff -->
+<script type="text/javascript">
+var _urq = _urq || [];
+_urq.push(['initSite', '70c370b6-b5ff-4f84-acba-843ab7f16160']);
+(function() {
+var ur = document.createElement('script'); ur.type = 'text/javascript'; ur.async = true;
+ur.src = ('https:' == document.location.protocol ? 'https://cdn.userreport.com/userreport.js' : 'http://cdn.userreport.com/userreport.js');
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ur, s);
+})();
 </script>
 </body>
 </html>
