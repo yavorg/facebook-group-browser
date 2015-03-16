@@ -99,14 +99,27 @@
 
 </script>
 <!-- UserReport stuff -->
-<script type="text/javascript">
-var _urq = _urq || [];
-_urq.push(['initSite', '70c370b6-b5ff-4f84-acba-843ab7f16160']);
-(function() {
-var ur = document.createElement('script'); ur.type = 'text/javascript'; ur.async = true;
-ur.src = ('https:' == document.location.protocol ? 'https://cdn.userreport.com/userreport.js' : 'http://cdn.userreport.com/userreport.js');
-var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ur, s);
-})();
+<script type="text/javascript"> 
+var _urq = _urq || []; 
+_urq.push(['setGACode', 'UA-18942851-3']); 
+_urq.push(['initSite', '70c370b6-b5ff-4f84-acba-843ab7f16160']); 
+
+(function() { 
+var ur = document.createElement('script'); ur.type = 'text/javascript'; ur.async = true; 
+ur.src = ('https:' == document.location.protocol ? 'https://cdn.userreport.com/userreport.js' : 'http://cdn.userreport.com/userreport.js'); 
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ur, s); 
+})(); 
+</script>
+<!-- Google Analytics stuff -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-18942851-3', 'auto');
+  ga('send', 'pageview');
+
 </script>
 </body>
 </html>
