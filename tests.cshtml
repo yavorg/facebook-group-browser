@@ -78,7 +78,7 @@
       {index: 0, created_time: "2008-03-25T00:00:00+0000"},
       {index: 1, created_time: "2008-03-24T00:00:00+0000"}
     ];
-    var cutoff = new Date("2008-03-23T12:00:00+0000");
+    var cutoff = new Date("2008-03-23T12:00:00Z");
 
     QUnit.test("filterOutPostsOlderThanDate handles array of even length",
       function(assert) {
@@ -99,7 +99,7 @@
       function(assert) {
         var result = filterOutPostsOlderThanDate(
           filterOutPostsOlderThanDateOddInput, 
-          new Date("2008-03-26T00:00:00+0000"));
+          new Date("2008-03-26T00:00:00Z"));
         assert.deepEqual(result, [], 
           "returns correct subset of array elements");
     });
@@ -108,7 +108,7 @@
       function(assert) {
         var result = filterOutPostsOlderThanDate(
           filterOutPostsOlderThanDateOddInput, 
-          new Date("2008-03-22T00:00:00+0000"));
+          new Date("2008-03-22T00:00:00Z"));
         assert.deepEqual(result, filterOutPostsOlderThanDateOddInput, 
           "returns correct subset of array elements");
     });
@@ -116,8 +116,8 @@
     function loadPostsWithinRange(assert, limit, specificValidation){
       var done = assert.async();
       loadPosts(
-        Date.parse("2008-03-25T00:00:00+0000"),
-        Date.parse("2008-03-25T00:12:00+0000"),
+        new Date("2008-03-25T00:00:00Z"),
+        new Date("2008-03-25T00:12:00Z"),
         limit,
         objectId, groupString, 
         function (error, posts){
@@ -153,8 +153,8 @@
     function loadPostsNoDataStartOfRange(assert, limit, specificValidation){
       var done = assert.async();
       loadPosts(
-        Date.parse("2008-03-22T19:00:00+0000"),
-        Date.parse("2008-03-22T21:00:00+0000"),
+        new Date("2008-03-22T19:00:00Z"),
+        new Date("2008-03-22T21:00:00Z"),
         limit,
         objectId, groupString, 
         function (error, posts){
