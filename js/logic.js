@@ -21,12 +21,12 @@ function filterOutPostsOlderThanDate(posts, cutoff){
     return [];
   } 
 
-  if (Date.parse(posts[posts.length-1].created_time) < cutoff){
+  if (moment(posts[posts.length-1].created_time) < cutoff){
     // The last post in the range is older than  the cutoff,
     // we split the range in two.
 
     var midpoint = Math.ceil(posts.length/2) - 1;
-    if(Date.parse(posts[midpoint].created_time) < cutoff){
+    if(moment(posts[midpoint].created_time) < cutoff){
       // The middle of the range is still older than the cutoff,
       // so we know for sure if any dates are newer than the cutoff
       // they will be in the first half of the range
