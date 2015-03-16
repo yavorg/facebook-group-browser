@@ -11,6 +11,10 @@ function loadObjectId(name, objectType, callback) {
     });
 }
 
+// Assumes an array of posts where the first post in the array (index 0) is
+// newer than the last post of the array (index length-1) and everything in the 
+// middle is monotonically decreasing (getting older) as you traverse from the 
+// beginning to the end.
 function filterOutPostsOlderThanDate(posts, cutoff){ 
   if(posts.length == 0){
     // We have recursed all the way, terminate
@@ -42,6 +46,25 @@ function filterOutPostsOlderThanDate(posts, cutoff){
   }
 }
 
+// The Facebook API tends to keep sending you the oldest post in the range over
+// and over again if you keep following the next link and it has no more data 
+// (instead of simply not sending you a next link). This is to try and catch
+// this behaivor.
+function endOfRangeDetected(posts, lastPostId){
+  if(posts.length > 1){
+    return false
+  } else if (posts.length == 0){
+    return true;
+  } else {
+    // There is exactly 1 post
+    if(lastPostId && posts[0].id == lastPostId){
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
 function loadPosts(startDate, endDate, numPosts, objectId, objectType, 
   loadCompleted) {
     var endDateForFacebook = endDate / 1000;
@@ -54,11 +77,16 @@ function loadPosts(startDate, endDate, numPosts, objectId, objectType,
     }
 
     var allPosts = [];
+    var lastPostId = null;
     FB.api(query, function parseResponse(response){
       console.log('Query: ' + query);
       if(response.data){
-        var postsLoaded = 
-          filterOutPostsOlderThanDate(response.data, startDate);
+        var postsLoaded = [];
+        if(!endOfRangeDetected(response.data, lastPostId)){
+          postsLoaded = 
+            filterOutPostsOlderThanDate(response.data, startDate);
+        }
+
         var postsLoadedCount = postsLoaded.length;
         console.log('Received response items: ' + response.data.length);
         console.log('Out of them this many are before the start date ' + 
@@ -76,6 +104,8 @@ function loadPosts(startDate, endDate, numPosts, objectId, objectType,
           // We still need more posts, so add what we fetched
           allPosts = allPosts.concat(
             postsLoaded.slice(0, actualPostsToLoadCount));
+          // Save this to enable us to detect end of range
+          lastPostId = allPosts[allPosts.length - 1].id;
 
           if(postsLoadedCount > remainingPostsToLoadCount){
             // We loaded more than we needed, so we are done now
