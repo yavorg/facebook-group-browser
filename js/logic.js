@@ -1,7 +1,8 @@
 function loadObjectId(name, objectType, callback) {
   FB.api('/search?type=' + objectType + '&q=' + encodeURIComponent(name),
     function(response){
-      if(response && response.data){
+      if(response && response.data && response.data.length > 0 && 
+        response.data[0].id){
         callback(null, response.data[0].id);
       } else {
         callback(new Error("Could not find the ID for the given " + 
