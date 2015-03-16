@@ -52,6 +52,8 @@
         loadObjectId($("#objectName").val(), 
           $("#objectType").val(), 
           objectIdLoaded);
+
+        ga('send', 'event', 'comments-search', 'start');
       });
     });
 
@@ -84,6 +86,7 @@
     }
 
     function enableControls(){
+      ga('send', 'event', 'facebook-login', 'success');
       $("#controls input, select").removeAttr("disabled");
     }
 
