@@ -8,6 +8,27 @@
     <meta name="description" content="Facebook Post Browser enables you to browse and bulk download Facebook posts for offline access. It currently supports posts created on Facebook Pages and Groups, and allows you to specify a date range of posts to load." />
     <meta name="keywords" content="facebook, facebook posts, facebook groups, facebook pages, 
     facebook export, facebook download, facebook save, facebook research, facebook browse, facebook post export, facebook post save, facebook post download" /> 
+    <style type="text/css">
+    #results {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    #results, th, td {
+      border: thin solid black;
+    }
+    #results td, #results th {
+      padding: 0.3em;
+    }
+    #results td {
+      vertical-align: top;  
+    }
+    #results td.description {
+      word-break: break-all;
+    }
+    #results td.metadata {
+      white-space: nowrap;
+    }
+    </style>
 </head>
 <body>
 <div id="fb-root"></div>
@@ -42,8 +63,18 @@
   <input type="button" id="submit" value="Submit" disabled="disabled"/>
 </fieldset>
 <p>Looking at <span id="resultCount">0</span> results</p>
-<ul id="posts">
-</ul>
+<table id="results">
+  <thead>
+    <tr>
+      <th>Metadata</th>
+      <th>Type</th>
+      <th>From ID</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody id="posts">
+  </tbody>
+</table>
 <script src="js/logic.js" type="text/javascript"></script>
 <script type="text/javascript">
 
@@ -78,8 +109,37 @@
         $("#posts").empty();
         $("#resultCount").html(posts.length);
         $.each(posts, function (index, value) {
-          $("#posts").append("<li><strong>" + value.created_time + ":</strong> "
-            + value.message + "</li>");
+          var row = "<tr><td class='metadata'><strong>Id: </strong>" + value.id + "<br/>" +
+          "<strong>Created Time: </strong>" + value.created_time + "</td>" +
+          "<td>" + value.type + "</td>" + 
+          "<td>" + value.from.id + "</td>" +
+          "<td class='description'>";
+
+          if(value.message){
+            row += "<strong>Message: </strong>" + value.message + "<br/>";
+          }
+          if(value.link){
+            row += '<strong>Link: </strong><a target="_blank" href="' + value.link + '">' + value.link + "</a><br/>";
+          }
+          if(value.story){
+            row += "<strong>Story: </strong>" + value.story + "<br/>";
+          }
+          if(value.caption){
+            row += "<strong>Caption: </strong>" + value.caption + "<br/>";
+          }
+          if(value.description){
+            row += "<strong>Description: </strong>" +  value.description + "<br/>";
+          }
+          if(value.name){
+            row += "<strong>Name: </strong>" + value.name + "<br/>";
+          }
+          if(value.picture){
+            row += '<strong>Picture: </strong><a target="_blank" href="' + value.picture + '">' + value.picture + "</a><br/>";
+          }
+          row +="</td></tr>";
+
+          $("#posts").append(row);
+
         });
       } else {
         alert(loadPostsError.message);
