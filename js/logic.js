@@ -1,12 +1,30 @@
 function loadObjectId(name, objectType, callback) {
+  name = name.trim();
   FB.api('/search?type=' + objectType + '&q=' + encodeURIComponent(name),
     function(response){
-      if(response && response.data && response.data.length > 0 && 
-        response.data[0].id){
-        callback(null, response.data[0].id);
-      } else {
+      var match;
+
+      if(response && response.data && response.data.length > 0){
+        // If there is only one result, return that
+        if(response.data.length == 1 && response.data[0].id){
+          match = response.data[0].id;
+        } else {
+          // For multiple matches, find the one that is an exact match
+          for (i = 0; i < response.data.length; i++){
+            if(response.data[i].name &&
+              response.data[i].name.toLowerCase() === name.toLowerCase()){
+              match = response.data[i].id;
+              break;
+            }
+          } 
+        }
+      }
+
+      if(!match){
         callback(new Error("Could not find the ID for the given " + 
           objectType), null);
+      } else {
+        callback(null, match);
       }
     });
 }
