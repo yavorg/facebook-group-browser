@@ -108,6 +108,11 @@
       if(!loadPostsError){
         $("#posts").empty();
         $("#resultCount").html(posts.length);
+
+        if(posts.length){
+          ga('send', 'event', 'comments-search', 'completed-with-results');
+        }
+
         $.each(posts, function (index, value) {
           var row = "<tr><td class='metadata'><strong>Id: </strong>" + value.id + "<br/>" +
           "<strong>Created Time: </strong>" + value.created_time + "</td>" +
