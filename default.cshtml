@@ -10,22 +10,54 @@
     <meta name="keywords" content="facebook, facebook posts, facebook groups, facebook pages, 
     facebook export, facebook download, facebook save, facebook research, facebook browse, facebook post export, facebook post save, facebook post download" /> 
     <style type="text/css">
-    #results {
+   
+    #resultsList {
       width: 100%;
     }
-    #results td.description {
+    #resultsList td.description {
       word-break: break-all;
     }
-    #results td.metadata {
+    #resultsList td.metadata {
       white-space: nowrap;
     }
+    #results {
+      display: none;
+    }
+    #searchForm {
+      display: none;
+    }
+    #intro {
+      display: none;
+    }
+
+    .header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    
+    .header h3 {
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 40px;
+    }
+
+    /* Responsive: Portrait tablets and up */
+    @@media screen and (min-width: 768px) {
+      /* Remove the padding we set earlier */
+      .header {
+        padding-right: 0;
+        padding-left: 0;
+      }
+  
+      /* Space out the masthead */
+      .header {
+        margin-bottom: 30px;
+      }
+    }
+
     </style>
-    <!-- TODO switch to CDN 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-    -->
-   <link rel="stylesheet" href="temp/css/bootstrap.min.css">
-  <link rel="stylesheet" href="temp/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" />
 </head>
 <body>
   <div id="fb-root"></div>
@@ -33,59 +65,65 @@
     var APPID = '@System.Configuration.ConfigurationManager.AppSettings["appId"]';
   </script>
   <script src="js/fb.js" type="text/javascript"></script>
-
   <div class="container">
-    <h1>Facebook Post Browser</h1>
-    <p class="lead">This tool enables you to browse and bulk download Facebook posts for offline access. It currently supports posts created on Facebook Pages and Groups, and allows you to specify a date range of posts to load. If you have any feedback, feature requests, or bug reports, please let us know <a href="https://feedback.userreport.com/70c370b6-b5ff-4f84-acba-843ab7f16160/" target="_blank">in our forum over here</a>.</p>
-    <div class="alert alert-info" role="alert">
-      <strong>Please log in</strong> with your Facebook account by pressing the button below to get started.
+    <div class="header clearfix">
+      <nav>
+        <ul class="nav pull-right">
+          <li role="presentation"><a href="https://feedback.userreport.com/70c370b6-b5ff-4f84-acba-843ab7f16160/" target="_blank">Feedback</a></li>
+        </ul>
+      </nav>
+      <h3 class="text-muted">Facebook Post Browser</h3>
     </div>
-    <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="true" data-auto-logout-link="false" scope="user_groups" onlogin="checkLoginState();"></div>
-    <br /> 
-    <fieldset id="controls" class="form-group">
-      <label for="objectType">Facebook Group or Page</label>
-      <select id="objectType" disabled="disabled" class="form-control">
-          <option value="group">Group</option>
-          <option value="page">Page</option>  
-      </select>
-      <br/>
-      <label for="objectName">Name (exact match, case insensitive)</label>
-      <input type="text" id="objectName" value="شباب 6 ابريل .. APRIL 6 YOUTH MOVEMENT" disabled="disabled" class="form-control"/>
-      <br />
-      <label for="startDate">Start date (UTC time)</label>
-      <input type="text" id="startDate" value="Jan 1, 2008" disabled="disabled" class="form-control"/>
-      <br />
-      <label for="endDate">End date (UTC time)</label>
-      <input type="text" id="endDate" value="Mar 25, 2008" disabled="disabled" class="form-control" />
-      <br />
-      <label for="numPosts" >Max number of posts</label>
-      <input type="text" id="numPosts" value="250" disabled="disabled" title="If you specify a large date range, there may be thousands of posts available, which will take a long time to load. Use this field to limit the number of posts returned to the 'last X' posts in the range." class="form-control"/>
-      <br />
-      <input type="button" id="submit" value="Submit" disabled="disabled" class="btn btn-primary"/>
-    </fieldset>
-    <p>Looking at <span id="resultCount">0</span> results</p>
-    <table id="results" class="table table-striped">
-      <thead>
-        <tr>
-          <th>Metadata</th>
-          <th>Type</th>
-          <th>From ID</th>
-          <th>Details</th>
-        </tr>
-      </thead>
-      <tbody id="posts">
-      </tbody>
-    </table>
-  </div>  
+    <div id="intro">
+      <p class="lead">This tool enables you to browse and bulk download Facebook posts for offline access. It currently supports posts created on Facebook Pages and Groups, and allows you to specify a date range of posts to load. If you have any feedback, feature requests, or bug reports, please let us know <a href="https://feedback.userreport.com/70c370b6-b5ff-4f84-acba-843ab7f16160/" target="_blank">in our forum over here</a>.</p>
+      <div class="alert alert-info" role="alert">
+        <strong>Please log in</strong> with your Facebook account by pressing the button below to get started.
+      </div>
+      <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="true" data-auto-logout-link="false" scope="user_groups" onlogin="checkLoginState();"></div>
+    </div>
+    <div id="searchForm">
+      <fieldset id="controls" class="form-group">
+        <label for="objectType">Facebook Group or Page</label>
+        <select id="objectType" disabled="disabled" class="form-control">
+            <option value="group">Group</option>
+            <option value="page">Page</option>  
+        </select>
+        <br/>
+        <label for="objectName">Name (exact match, case insensitive)</label>
+        <input type="text" id="objectName" value="شباب 6 ابريل .. APRIL 6 YOUTH MOVEMENT" disabled="disabled" class="form-control"/>
+        <br />
+        <label for="startDate">Start date (UTC time)</label>
+        <input type="text" id="startDate" value="Jan 1, 2008" disabled="disabled" class="form-control"/>
+        <br />
+        <label for="endDate">End date (UTC time)</label>
+        <input type="text" id="endDate" value="Mar 25, 2008" disabled="disabled" class="form-control" />
+        <br />
+        <label for="numPosts" >Max number of posts</label>
+        <input type="text" id="numPosts" value="250" disabled="disabled" title="If you specify a large date range, there may be thousands of posts available, which will take a long time to load. Use this field to limit the number of posts returned to the 'last X' posts in the range." class="form-control"/>
+        <br />
+        <input type="button" id="submit" value="Submit" disabled="disabled" class="btn btn-primary"/>
+      </fieldset>
+      <div id="results">
+        <p>Looking at <span id="resultCount">0</span> results</p>
+        <table id="resultsList" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Metadata</th>
+              <th>Type</th>
+              <th>From ID</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="posts">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <!-- TODO CDN 
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-  -->
-  <script src="/js/bootstrap.min.js"></script>
   <!-- Bootstrap IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <!-- TODO Needs to be on CDN 
-  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-  -->
+  <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
   <script src="js/logic.js" type="text/javascript"></script>
   <script type="text/javascript">
 
@@ -102,6 +140,7 @@
 
       function objectIdLoaded(loadObjectIdError, objectId) {    
         setCursorToProgress();
+        toggleResultsVisibilityOff();
 
         if(!loadObjectIdError){
           loadPosts(Date.parse($("#startDate").val()), 
@@ -115,6 +154,7 @@
 
       function loadCompleted(loadPostsError, posts){
         setCursorToDefault();
+        toggleResultsVisibilityOn();
 
         if(!loadPostsError){
           $("#posts").empty();
@@ -165,11 +205,25 @@
       function enableControls(){
         ga('send', 'event', 'facebook-login', 'success');
         $("#controls input, select").removeAttr("disabled");
+        $("#intro").css("display", "none");
+        $("#searchForm").css("display", "block");
+      }
+
+      function loginNeeded(){
+        $("#intro").css("display", "block");
       }
 
       function setCursorToProgress(){
         // Make cursor wait
         $("body").css("cursor", "progress");
+      }
+
+      function toggleResultsVisibilityOn(){
+        $("#results").css("display", "block");
+      }
+
+      function toggleResultsVisibilityOff(){
+        $("#results").css("display", "none");
       }
 
       function setCursorToDefault(){
