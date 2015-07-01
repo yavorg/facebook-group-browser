@@ -66,23 +66,40 @@
   </script>
   <script src="js/fb.js" type="text/javascript"></script>
   <div class="container">
-    <div class="header clearfix">
-      <nav>
-        <ul class="nav pull-right">
-          <li role="presentation"><a href="https://feedback.userreport.com/70c370b6-b5ff-4f84-acba-843ab7f16160/" target="_blank">Feedback</a></li>
-        </ul>
-      </nav>
-      <h3 class="text-muted">Facebook Post Browser</h3>
-    </div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Facebook Post Browser</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://feedback.userreport.com/70c370b6-b5ff-4f84-acba-843ab7f16160/#ideas/popular">Feedback</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div><!--/.container-fluid -->
+    </nav>
     <div id="intro">
       <p class="lead">This tool enables you to browse and bulk download Facebook posts for offline access. It currently supports posts created on Facebook Pages and Groups, and allows you to specify a date range of posts to load. If you have any feedback, feature requests, or bug reports, please let us know <a href="https://feedback.userreport.com/70c370b6-b5ff-4f84-acba-843ab7f16160/" target="_blank">in our forum over here</a>.</p>
-      <div class="alert alert-info" role="alert">
-        <strong>Please log in</strong> with your Facebook account by pressing the button below to get started.
-      </div>
-      <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="true" data-auto-logout-link="false" scope="user_groups" onlogin="checkLoginState();"></div>
+      <p class="lead"><strong>Please log in</strong> with your Facebook account by pressing the button below to get started.</p>
+      <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false" scope="user_groups" onlogin="checkLoginState();"></div>
     </div>
     <div id="searchForm">
-      <fieldset id="controls" class="form-group">
+@if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["statusMessage"])) {
+        <div class="alert alert-danger" role="alert">
+          <strong>Alert!</strong> @System.Configuration.ConfigurationManager.AppSettings["statusMessage"]
+
+          @if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["statusLink"])) {
+            @: For more information, <a href='@System.Configuration.ConfigurationManager.AppSettings["statusLink"]'>click here</a>.
+          }
+        </div>
+}
+        <fieldset id="controls" class="form-group">
         <label for="objectType">Facebook Group or Page</label>
         <select id="objectType" disabled="disabled" class="form-control">
             <option value="group">Group</option>
