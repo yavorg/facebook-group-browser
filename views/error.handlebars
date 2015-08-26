@@ -1,0 +1,10 @@
+<div>
+  <h3>Whoops, something went wrong</h3>
+  <p class="lead">{{message}}</p>
+  {{#if error.status}}
+  	<p><stong>Error status:</strong> + {{error.status}}</p>
+  	<p><strong>Stack trace:</strong></p>
+  	<pre>{{error.stack}}<code>
+  	</code></pre>
+  {{/if}}
+</div>

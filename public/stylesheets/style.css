@@ -1,8 +1,43 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+#resultsList {
+  width: 100%;
+}
+#resultsList td.description {
+  word-break: break-all;
+}
+#resultsList td.metadata {
+  white-space: nowrap;
+}
+#results {
+  display: none;
+}
+#searchForm {
+  display: none;
+}
+#intro {
+  display: none;
 }
 
-a {
-  color: #00B7FF;
+.header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+}
+
+/* Responsive: Portrait tablets and up */
+@@media screen and (min-width: 768px) {
+  /* Remove the padding we set earlier */
+  .header {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
 }

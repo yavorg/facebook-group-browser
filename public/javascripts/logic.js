@@ -1,4 +1,4 @@
-function loadObjectId(name, objectType, callback) {
+﻿function loadObjectId(name, objectType, callback) {
   name = name.trim();
   FB.api('/search?type=' + objectType + '&q=' + encodeURIComponent(name),
     function(response){

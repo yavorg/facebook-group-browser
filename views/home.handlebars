@@ -1,0 +1,60 @@
+<div id="fb-root"></div>
+<script type="text/javascript">
+  var APPID = '{{appId}}';
+</script>
+<script src="/javascripts/fb.js" type="text/javascript"></script>
+<div id="intro">
+  <p class="lead">This tool enables you to browse and bulk download Facebook posts for offline access. It currently supports posts created on Facebook Pages and Groups, and allows you to specify a date range of posts to load. If you have any feedback, feature requests, or bug reports, please let us know <a href="https://feedback.userreport.com/70c370b6-b5ff-4f84-acba-843ab7f16160/" target="_blank">in our forum over here</a>.</p>
+  <p class="lead"><strong>Please log in</strong> with your Facebook account by pressing the button below to get started.</p>
+  <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false" scope="user_groups" onlogin="checkLoginState();"></div>
+</div>
+<div id="searchForm">
+  {{#if statusMessage}}
+    <div class="alert alert-danger" role="alert">
+      <strong>Alert!</strong> {{statusMessage}} 
+      {{#if statusLink}}
+        For more information, <a href='{{statusLink}}'>click here</a>.
+      {{/if}}
+    </div>
+  {{/if}}
+  <fieldset id="controls" class="form-group">
+    <label for="objectType">Facebook Group or Page</label>
+    <select id="objectType" disabled="disabled" class="form-control">
+        <option value="group">Group</option>
+        <option value="page">Page</option>  
+    </select>
+    <br/>
+    <label for="objectName">Name (exact match, case insensitive)</label>
+    <input type="text" id="objectName" value="شباب 6 ابريل .. APRIL 6 YOUTH MOVEMENT" disabled="disabled" class="form-control"/>
+    <br />
+    <label for="startDate">Start date (UTC time)</label>
+    <input type="text" id="startDate" value="Jan 1, 2008" disabled="disabled" class="form-control"/>
+    <br />
+    <label for="endDate">End date (UTC time)</label>
+    <input type="text" id="endDate" value="Mar 25, 2008" disabled="disabled" class="form-control" />
+    <br />
+    <label for="numPosts" >Max number of posts</label>
+    <input type="text" id="numPosts" value="250" disabled="disabled" title="If you specify a large date range, there may be thousands of posts available, which will take a long time to load. Use this field to limit the number of posts returned to the 'last X' posts in the range." class="form-control"/>
+    <br />
+    <input type="button" id="submit" value="Submit" disabled="disabled" class="btn btn-primary"/>
+  </fieldset>
+  <div id="results">
+    <p>Looking at <span id="resultCount">0</span> results</p>
+    <table id="resultsList" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Metadata</th>
+          <th>Type</th>
+          <th>From ID</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody id="posts">
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
+<script src="/javascripts/logic.js" type="text/javascript"></script>
+<script src="/javascripts/view.js" type="text/javascript"></script> 
+ 

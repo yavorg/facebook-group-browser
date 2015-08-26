@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -11,22 +11,19 @@
   
   <div id="fb-root"></div>
   <script type="text/javascript">
-    var APPID = '@System.Configuration.ConfigurationManager.AppSettings["appId"]';
+    var APPID = '{{appId}}';
 
     function enableControls(){
-      QUnit.config.autostart = false;
       QUnit.start();
     }
   </script>
-  <script src="js/fb.js" type="text/javascript"></script>
+  <script src="/javascripts/fb.js" type="text/javascript"></script>
   <div class="fb-login-button" data-max-rows="1" data-size="medium" 
-    data-show-faces="true" data-auto-logout-link="false" scope="user_groups" 
-    onlogin="checkLoginState();"></div>
-
+    data-show-faces="true" data-auto-logout-link="false" scope="user_groups" onlogin="checkLoginState();"></div>
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
   <script src="//code.jquery.com/qunit/qunit-1.17.1.js"></script>
-  <script src="js/logic.js"></script>
-  <script src="js/tests.js"></script>
+  <script src="/javascripts/logic.js"></script>
+  <script src="/javascripts/tests.js"></script>
 </body>
 </html>

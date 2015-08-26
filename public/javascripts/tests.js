@@ -1,3 +1,5 @@
+﻿QUnit.config.autostart = false;
+
 var objectId = '9973986703';
 var groupString = 'group';
 
