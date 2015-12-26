@@ -2,29 +2,33 @@
   name = name.trim();
   FB.api('/search?type=' + objectType + '&q=' + encodeURIComponent(name),
     function(response){
-      var match;
+      if(!response.error){
+        var match;
 
-      if(response && response.data && response.data.length > 0){
-        // If there is only one result, return that
-        if(response.data.length == 1 && response.data[0].id){
-          match = response.data[0].id;
-        } else {
-          // For multiple matches, find the one that is an exact match
-          for (i = 0; i < response.data.length; i++){
-            if(response.data[i].name &&
-              response.data[i].name.toLowerCase() === name.toLowerCase()){
-              match = response.data[i].id;
-              break;
-            }
-          } 
+        if(response && response.data && response.data.length > 0){
+          // If there is only one result, return that
+          if(response.data.length == 1 && response.data[0].id){
+            match = response.data[0].id;
+          } else {
+            // For multiple matches, find the one that is an exact match
+            for (i = 0; i < response.data.length; i++){
+              if(response.data[i].name &&
+                response.data[i].name.toLowerCase() === name.toLowerCase()){
+                match = response.data[i].id;
+                break;
+              }
+            } 
+          }
         }
-      }
 
-      if(!match){
-        callback(new Error("Could not find the ID for the given " + 
-          objectType), null);
+        if(!match){
+          callback(new Error("Could not find the ID for the given " + 
+            objectType), null);
+        } else {
+          callback(null, match);
+        }
       } else {
-        callback(null, match);
+        callback(response.error, null);
       }
     });
 }
@@ -98,53 +102,57 @@ function loadPosts(startDate, endDate, numPosts, objectId, objectType,
     var lastPostId = null;
     FB.api(query, function parseResponse(response){
       console.log('Query: ' + query);
-      if(response.data){
-        var postsLoaded = [];
-        if(!endOfRangeDetected(response.data, lastPostId)){
-          postsLoaded = 
-            filterOutPostsOlderThanDate(response.data, startDate);
-        }
+      if(!response.error){
+        if(response.data){
+          var postsLoaded = [];
+          if(!endOfRangeDetected(response.data, lastPostId)){
+            postsLoaded = 
+              filterOutPostsOlderThanDate(response.data, startDate);
+          }
 
-        var postsLoadedCount = postsLoaded.length;
-        console.log('Received response items: ' + response.data.length);
-        console.log('Out of them this many are before the start date ' + 
-          postsLoadedCount);
-        console.log('Total items cached so far: ' + allPosts.length);
-      
-        var remainingPostsToLoadCount = numPosts - allPosts.length;
-        var actualPostsToLoadCount = 
-          Math.min(remainingPostsToLoadCount, postsLoadedCount);
-        console.log('Will cache this many from response: ' +
-          actualPostsToLoadCount);
+          var postsLoadedCount = postsLoaded.length;
+          console.log('Received response items: ' + response.data.length);
+          console.log('Out of them this many are before the start date ' + 
+            postsLoadedCount);
+          console.log('Total items cached so far: ' + allPosts.length);
+        
+          var remainingPostsToLoadCount = numPosts - allPosts.length;
+          var actualPostsToLoadCount = 
+            Math.min(remainingPostsToLoadCount, postsLoadedCount);
+          console.log('Will cache this many from response: ' +
+            actualPostsToLoadCount);
 
-        var loadMore = true;
-        if(actualPostsToLoadCount > 0){
-          // We still need more posts, so add what we fetched
-          allPosts = allPosts.concat(
-            postsLoaded.slice(0, actualPostsToLoadCount));
-          // Save this to enable us to detect end of range
-          lastPostId = allPosts[allPosts.length - 1].id;
+          var loadMore = true;
+          if(actualPostsToLoadCount > 0){
+            // We still need more posts, so add what we fetched
+            allPosts = allPosts.concat(
+              postsLoaded.slice(0, actualPostsToLoadCount));
+            // Save this to enable us to detect end of range
+            lastPostId = allPosts[allPosts.length - 1].id;
 
-          if(postsLoadedCount > remainingPostsToLoadCount){
-            // We loaded more than we needed, so we are done now
+            if(postsLoadedCount > remainingPostsToLoadCount){
+              // We loaded more than we needed, so we are done now
+              loadMore = false;
+            }
+          } else {
+            // We already loaded what we needed
             loadMore = false;
           }
-        } else {
-          // We already loaded what we needed
-          loadMore = false;
-        }
 
-        if(loadMore && response.paging && response.paging.next) {
-          console.log('Will load the next page.');
-          query = response.paging.next;
-          FB.api(query, parseResponse);
-        } else{
-          console.log('Will not load more, returning all ' 
-            + allPosts.length + ' cached items');
-          loadCompleted(null, allPosts);
+          if(loadMore && response.paging && response.paging.next) {
+            console.log('Will load the next page.');
+            query = response.paging.next;
+            FB.api(query, parseResponse);
+          } else{
+            console.log('Will not load more, returning all ' 
+              + allPosts.length + ' cached items');
+            loadCompleted(null, allPosts);
+          }
+        } else {
+          loadCompleted(new Error("No results returned"), null);
         }
       } else {
-        loadCompleted(new Error("No results returned"), null);
+        loadCompleted(response.error, null)
       }
     });
 }

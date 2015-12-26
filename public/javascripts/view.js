@@ -1,4 +1,15 @@
 $(function () {
+  if(env === 'development'){
+    TraceKit.report.subscribe(function logger(errorReport) {
+      console.log(errorReport);
+    });
+  } else {
+    TraceKit.remoteFetching = false;
+    TraceKit.report.subscribe(function logger(errorReport) { 
+      ga('send', 'event', 'clientError', errorReport);
+    });
+  }
+
   $("#submit").click(function () {
     
     loadObjectId($("#objectName").val(), 
@@ -20,8 +31,10 @@ function objectIdLoaded(loadObjectIdError, objectId) {
   } else {
     setCursorToDefault();
     alert(loadObjectIdError.message);
+    reportError(loadObjectIdError);
   }
 }
+
 
 function loadCompleted(loadPostsError, posts){
   setCursorToDefault();
@@ -70,7 +83,12 @@ function loadCompleted(loadPostsError, posts){
     });
   } else {
     alert(loadPostsError.message);
+    reportError(loadPostsError);
   }
+}
+
+function reportError(error){
+  TraceKit.report(error);
 }
 
 function enableControls(){
