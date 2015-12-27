@@ -1,6 +1,7 @@
 ﻿QUnit.config.autostart = false;
 
 var objectId = '9973986703';
+var limit = 250;
 var groupString = 'group';
 
 QUnit.test("loadObjectId returns correct ID for group", function(assert) {
@@ -85,6 +86,86 @@ QUnit.test(
     assert.deepEqual(result, filterOutPostsOlderThanDateOddInput, 
       "returns correct subset of array elements");
 });
+
+function ensureError(error, posts, assert){
+  assert.ok(error instanceof Error, "error object is returned");
+  assert.equal(posts, null, "posts are null");
+} 
+
+QUnit.test(
+  "loadPosts validates its startDate input",
+  function(assert){
+    var done = assert.async();
+    loadPosts(
+      NaN, new Date("2008-03-25T00:00:00Z"), limit, objectId,
+      groupString, function(error, posts){
+        ensureError(error, posts, assert);
+        done();
+      });
+  }
+);
+
+QUnit.test(
+  "loadPosts validates its endDate input",
+  function(assert){
+    var done = assert.async();
+    loadPosts(
+      new Date("2008-03-25T00:00:00Z"), -1, limit, objectId,
+      groupString, function(error, posts){
+        ensureError(error, posts, assert);
+        done();
+      });
+  }
+);
+
+QUnit.test(
+  "loadPosts validates its limit input",
+  function(assert){
+    var done = assert.async();
+    loadPosts(
+      new Date("2008-03-25T00:00:00Z"),
+      new Date("2008-03-25T00:12:00Z"), 0, objectId,
+      groupString, function(error, posts){
+        ensureError(error, posts, assert);
+        done();
+      });
+  }
+);
+
+QUnit.test(
+  "loadPosts validates its objectId input",
+  function(assert){
+    var done = assert.async();
+    loadPosts(
+      new Date("2008-03-25T00:00:00Z"),
+      new Date("2008-03-25T00:12:00Z"), limit, null,
+      groupString, function(error, posts){
+        ensureError(error, posts, assert);
+        done();
+      });
+  }
+);
+
+QUnit.test(
+  "loadPosts validates its objectType input",
+  function(assert){
+    var done = assert.async();
+    loadPosts(
+      new Date("2008-03-25T00:00:00Z"),
+      new Date("2008-03-25T00:12:00Z"), limit, objectId,
+      "bananas", function(error, posts){
+        ensureError(error, posts, assert);
+        done();
+      });
+  }
+);
+
+QUnit.test(
+  "loadPosts limit parameter does the right thing",
+  function(assert){
+  
+});
+
 
 function loadPostsWithinRange(assert, limit, specificValidation){
   var done = assert.async();

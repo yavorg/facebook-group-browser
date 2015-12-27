@@ -26,8 +26,8 @@ function objectIdLoaded(loadObjectIdError, objectId) {
 
   if(!loadObjectIdError){
     loadPosts(Date.parse($("#startDate").val()), 
-      Date.parse($("#endDate").val()), $("#numPosts").val(), objectId, 
-      $("#objectType").val(), loadCompleted);
+      Date.parse($("#endDate").val()), parseInt($("#numPosts").val()), 
+      objectId, $("#objectType").val(), loadCompleted);
   } else {
     setCursorToDefault();
     alert(loadObjectIdError.message);

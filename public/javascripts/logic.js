@@ -89,70 +89,91 @@ function endOfRangeDetected(posts, lastPostId){
 
 function loadPosts(startDate, endDate, numPosts, objectId, objectType, 
   loadCompleted) {
-    var endDateForFacebook = endDate / 1000;
+    var dateFormatExplanation = "Dates must be of the format Jan 1, 2008 " +
+      "and provided in UTC time."
 
-    var query = objectId + "/feed?until=" + endDateForFacebook
-    if (objectType === "group") {
-        query += "&limit=500";
+    if(!startDate || startDate < 1){
+      loadCompleted(new Error("Invalid start date provided. " + 
+        dateFormatExplanation), null); 
+    } else if (!endDate || endDate < 1) {
+      loadCompleted(new Error("Invalid end date provided. " + 
+        dateFormatExplanation), null);       
+    } else if (!numPosts || numPosts < 1) {
+       loadCompleted(new Error("Invalid number of posts provided. " + 
+        "Please specify a whole number greater than 0."), null);      
+    } else if (!objectId) {
+       loadCompleted(new Error("Invalid object ID provided.", null));     
+    } else if (!objectType || 
+      (objectType !== "page" && objectType !== "group")){
+        loadCompleted(new Error("Invalid object type provided. " +
+          "Please use 'page' or 'group'."), null);
     } else {
-        query += "&limit=250"; // Pages only allow 250 items at a time
-    }
 
-    var allPosts = [];
-    var lastPostId = null;
-    FB.api(query, function parseResponse(response){
-      console.log('Query: ' + query);
-      if(!response.error){
-        if(response.data){
-          var postsLoaded = [];
-          if(!endOfRangeDetected(response.data, lastPostId)){
-            postsLoaded = 
-              filterOutPostsOlderThanDate(response.data, startDate);
-          }
+      var endDateForFacebook = endDate / 1000;
 
-          var postsLoadedCount = postsLoaded.length;
-          console.log('Received response items: ' + response.data.length);
-          console.log('Out of them this many are before the start date ' + 
-            postsLoadedCount);
-          console.log('Total items cached so far: ' + allPosts.length);
-        
-          var remainingPostsToLoadCount = numPosts - allPosts.length;
-          var actualPostsToLoadCount = 
-            Math.min(remainingPostsToLoadCount, postsLoadedCount);
-          console.log('Will cache this many from response: ' +
-            actualPostsToLoadCount);
+      var query = objectId + "/feed?until=" + endDateForFacebook
+      if (objectType === "group") {
+          query += "&limit=500";
+      } else {
+          query += "&limit=250"; // Pages only allow 250 items at a time
+      }
 
-          var loadMore = true;
-          if(actualPostsToLoadCount > 0){
-            // We still need more posts, so add what we fetched
-            allPosts = allPosts.concat(
-              postsLoaded.slice(0, actualPostsToLoadCount));
-            // Save this to enable us to detect end of range
-            lastPostId = allPosts[allPosts.length - 1].id;
+      var allPosts = [];
+      var lastPostId = null;
+      FB.api(query, function parseResponse(response){
+        console.log('Query: ' + query);
+        if(!response.error){
+          if(response.data){
+            var postsLoaded = [];
+            if(!endOfRangeDetected(response.data, lastPostId)){
+              postsLoaded = 
+                filterOutPostsOlderThanDate(response.data, startDate);
+            }
 
-            if(postsLoadedCount > remainingPostsToLoadCount){
-              // We loaded more than we needed, so we are done now
+            var postsLoadedCount = postsLoaded.length;
+            console.log('Received response items: ' + response.data.length);
+            console.log('Out of them this many are before the start date ' + 
+              postsLoadedCount);
+            console.log('Total items cached so far: ' + allPosts.length);
+          
+            var remainingPostsToLoadCount = numPosts - allPosts.length;
+            var actualPostsToLoadCount = 
+              Math.min(remainingPostsToLoadCount, postsLoadedCount);
+            console.log('Will cache this many from response: ' +
+              actualPostsToLoadCount);
+
+            var loadMore = true;
+            if(actualPostsToLoadCount > 0){
+              // We still need more posts, so add what we fetched
+              allPosts = allPosts.concat(
+                postsLoaded.slice(0, actualPostsToLoadCount));
+              // Save this to enable us to detect end of range
+              lastPostId = allPosts[allPosts.length - 1].id;
+
+              if(postsLoadedCount > remainingPostsToLoadCount){
+                // We loaded more than we needed, so we are done now
+                loadMore = false;
+              }
+            } else {
+              // We already loaded what we needed
               loadMore = false;
             }
-          } else {
-            // We already loaded what we needed
-            loadMore = false;
-          }
 
-          if(loadMore && response.paging && response.paging.next) {
-            console.log('Will load the next page.');
-            query = response.paging.next;
-            FB.api(query, parseResponse);
-          } else{
-            console.log('Will not load more, returning all ' 
-              + allPosts.length + ' cached items');
-            loadCompleted(null, allPosts);
+            if(loadMore && response.paging && response.paging.next) {
+              console.log('Will load the next page.');
+              query = response.paging.next;
+              FB.api(query, parseResponse);
+            } else{
+              console.log('Will not load more, returning all ' 
+                + allPosts.length + ' cached items');
+              loadCompleted(null, allPosts);
+            }
+          } else {
+            loadCompleted(new Error("No results returned"), null);
           }
         } else {
-          loadCompleted(new Error("No results returned"), null);
+          loadCompleted(response.error, null)
         }
-      } else {
-        loadCompleted(response.error, null)
-      }
-    });
+      });
+  }
 }
