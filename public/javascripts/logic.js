@@ -116,9 +116,9 @@ function loadPosts(startDate, endDate, numPosts, objectId, objectType,
 
       var query = objectId + "/feed?until=" + endDateForFacebook
       if (objectType === "group") {
-          query += "&limit=500";
+          query += "&limit=250";
       } else {
-          query += "&limit=250"; // Pages only allow 250 items at a time
+          query += "&limit=100"; // Pages only allow 100 items at a time
       }
 
       var allPosts = [];
