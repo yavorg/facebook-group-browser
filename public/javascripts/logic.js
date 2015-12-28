@@ -28,7 +28,10 @@
           callback(null, match);
         }
       } else {
-        callback(response.error, null);
+        var error = new UserError("The Facebook API returned an error when " +
+          "trying to look up the ID for this " + objectType);
+        error.innerError = response.error;
+        callback(error, null);
       }
     });
 }
@@ -172,7 +175,11 @@ function loadPosts(startDate, endDate, numPosts, objectId, objectType,
             loadCompleted(new UserError("No results returned"), null);
           }
         } else {
-          loadCompleted(response.error, null)
+          var error = new UserError("The Facebook API returned an error. " +
+            "This sometimes happens when you request too many items at once, " +
+            "please consider lowering the max number of posts.");
+          error.innerError = response.error;
+          loadCompleted(error, null)
         }
       });
   }

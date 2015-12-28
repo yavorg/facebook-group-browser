@@ -88,6 +88,10 @@ function loadCompleted(loadPostsError, posts){
 function reportError(error){
   if(error instanceof UserError){
     alert(error.message);
+
+    if(error.innerError){
+      TraceKit.report(error.innerError);
+    }
   } else {
     TraceKit.report(error);
   }
