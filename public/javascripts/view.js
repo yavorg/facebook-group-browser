@@ -30,7 +30,6 @@ function objectIdLoaded(loadObjectIdError, objectId) {
       objectId, $("#objectType").val(), loadCompleted);
   } else {
     setCursorToDefault();
-    alert(loadObjectIdError.message);
     reportError(loadObjectIdError);
   }
 }
@@ -82,13 +81,16 @@ function loadCompleted(loadPostsError, posts){
 
     });
   } else {
-    alert(loadPostsError.message);
     reportError(loadPostsError);
   }
 }
 
 function reportError(error){
-  TraceKit.report(error);
+  if(error instanceof UserError){
+    alert(error.message);
+  } else {
+    TraceKit.report(error);
+  }
 }
 
 function enableControls(){

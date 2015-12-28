@@ -22,7 +22,7 @@
         }
 
         if(!match){
-          callback(new Error("Could not find the ID for the given " + 
+          callback(new UserError("Could not find the ID for the given " + 
             objectType), null);
         } else {
           callback(null, match);
@@ -93,19 +93,19 @@ function loadPosts(startDate, endDate, numPosts, objectId, objectType,
       "and provided in UTC time."
 
     if(!startDate || startDate < 1){
-      loadCompleted(new Error("Invalid start date provided. " + 
+      loadCompleted(new UserError("Invalid start date provided. " + 
         dateFormatExplanation), null); 
     } else if (!endDate || endDate < 1) {
-      loadCompleted(new Error("Invalid end date provided. " + 
+      loadCompleted(new UserError("Invalid end date provided. " + 
         dateFormatExplanation), null);       
     } else if (!numPosts || numPosts < 1) {
-       loadCompleted(new Error("Invalid number of posts provided. " + 
+       loadCompleted(new UserError("Invalid number of posts provided. " + 
         "Please specify a whole number greater than 0."), null);      
     } else if (!objectId) {
-       loadCompleted(new Error("Invalid object ID provided.", null));     
+       loadCompleted(new UserError("Invalid object ID provided.", null));     
     } else if (!objectType || 
       (objectType !== "page" && objectType !== "group")){
-        loadCompleted(new Error("Invalid object type provided. " +
+        loadCompleted(new UserError("Invalid object type provided. " +
           "Please use 'page' or 'group'."), null);
     } else {
 
@@ -169,7 +169,7 @@ function loadPosts(startDate, endDate, numPosts, objectId, objectType,
               loadCompleted(null, allPosts);
             }
           } else {
-            loadCompleted(new Error("No results returned"), null);
+            loadCompleted(new UserError("No results returned"), null);
           }
         } else {
           loadCompleted(response.error, null)

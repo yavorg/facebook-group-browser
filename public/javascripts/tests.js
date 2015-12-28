@@ -4,11 +4,24 @@ var objectId = '9973986703';
 var limit = 250;
 var groupString = 'group';
 
+function ensureErrorIsNull(error, assert){
+  assert.equal(error, null, "error property is null");
+}
+
+function ensureErrorIsUserError(error, assert){
+  assert.ok(error && error instanceof UserError, 
+    "error property is a UserError");
+}
+
+function ensurePostsAreNull(posts, assert){
+  assert.equal(posts, null, "posts are null");
+}
+
 QUnit.test("loadObjectId returns correct ID for group", function(assert) {
   var done = assert.async();
   loadObjectId("شباب 6 ابريل .. APRIL 6 YOUTH MOVEMENT", groupString, 
     function(error, id){
-      assert.equal(error, null, "error property is null");
+      ensureErrorIsNull(error, assert);
       assert.equal(id, objectId, "correct ID is returned"); 
       done();         
     }
@@ -19,27 +32,29 @@ QUnit.test("loadObjectId returns correct ID for page", function(assert) {
   var done = assert.async();
   loadObjectId("Justin Bieber", "page", 
     function(error, id){
-      assert.equal(error, null, "error property is null");
+      ensureErrorIsNull(error, assert);
       assert.equal(id, '67253243887', "correct ID is returned"); 
       done();         
     }
   );
 });
+
 QUnit.test("loadObjectId errors with incorrect object name", function(assert) {
   var done = assert.async();
   loadObjectId("1716605E-36AB-4394-AB4A-2E5FAEA37BAD", groupString, 
     function(error, id){
-      assert.equal(error, "Error: Could not find the ID for the given group",
-        "error property is set correctly");
+      ensureErrorIsUserError(error, assert);
       assert.equal(id, null, "ID is null"); 
       done();         
     }
   );
 });
+
 QUnit.test("filterOutPostsOlderThanDate handles empty array", function(assert) {
   var result = filterOutPostsOlderThanDate([], new Date());
   assert.deepEqual(result, [], "returns an empty array");
 });
+
 var filterOutPostsOlderThanDateOddInput =  [
   {index: 0, created_time: "2008-03-25T00:00:00+0000"},
   {index: 1, created_time: "2008-03-24T00:00:00+0000"},
@@ -61,6 +76,7 @@ QUnit.test("filterOutPostsOlderThanDate handles array of even length",
     assert.deepEqual(result, filterOutPostsOlderThanDateOutput, 
       "returns correct subset of array elements");
 });
+
 QUnit.test("filterOutPostsOlderThanDate handles array of odd length",
   function(assert) {
    var result = filterOutPostsOlderThanDate(
@@ -68,6 +84,7 @@ QUnit.test("filterOutPostsOlderThanDate handles array of odd length",
     assert.deepEqual(result, filterOutPostsOlderThanDateOutput, 
       "returns correct subset of array elements");
 });
+
 QUnit.test(
   "filterOutPostsOlderThanDate handles whole array of older entries",
   function(assert) {
@@ -87,11 +104,6 @@ QUnit.test(
       "returns correct subset of array elements");
 });
 
-function ensureError(error, posts, assert){
-  assert.ok(error instanceof Error, "error object is returned");
-  assert.equal(posts, null, "posts are null");
-} 
-
 QUnit.test(
   "loadPosts validates its startDate input",
   function(assert){
@@ -99,7 +111,8 @@ QUnit.test(
     loadPosts(
       NaN, new Date("2008-03-25T00:00:00Z"), limit, objectId,
       groupString, function(error, posts){
-        ensureError(error, posts, assert);
+        ensureErrorIsUserError(error, assert);
+        ensurePostsAreNull(posts, assert);
         done();
       });
   }
@@ -112,7 +125,8 @@ QUnit.test(
     loadPosts(
       new Date("2008-03-25T00:00:00Z"), -1, limit, objectId,
       groupString, function(error, posts){
-        ensureError(error, posts, assert);
+        ensureErrorIsUserError(error, assert);
+        ensurePostsAreNull(posts, assert);
         done();
       });
   }
@@ -126,7 +140,8 @@ QUnit.test(
       new Date("2008-03-25T00:00:00Z"),
       new Date("2008-03-25T00:12:00Z"), 0, objectId,
       groupString, function(error, posts){
-        ensureError(error, posts, assert);
+        ensureErrorIsUserError(error, assert);
+        ensurePostsAreNull(posts, assert);
         done();
       });
   }
@@ -140,7 +155,8 @@ QUnit.test(
       new Date("2008-03-25T00:00:00Z"),
       new Date("2008-03-25T00:12:00Z"), limit, null,
       groupString, function(error, posts){
-        ensureError(error, posts, assert);
+        ensureErrorIsUserError(error, assert);
+        ensurePostsAreNull(posts, assert);
         done();
       });
   }
@@ -154,18 +170,12 @@ QUnit.test(
       new Date("2008-03-25T00:00:00Z"),
       new Date("2008-03-25T00:12:00Z"), limit, objectId,
       "bananas", function(error, posts){
-        ensureError(error, posts, assert);
+        ensureErrorIsUserError(error, assert);
+        ensurePostsAreNull(posts, assert);
         done();
       });
   }
 );
-
-QUnit.test(
-  "loadPosts limit parameter does the right thing",
-  function(assert){
-  
-});
-
 
 function loadPostsWithinRange(assert, limit, specificValidation){
   var done = assert.async();
@@ -175,7 +185,7 @@ function loadPostsWithinRange(assert, limit, specificValidation){
     limit,
     objectId, groupString, 
     function (error, posts){
-      assert.equal(error, null, "error property is null");
+      ensureErrorIsNull(error, assert);
       var message = "the ID for each result matches";
       assert.equal(posts[0].id, "9973986703_10150512342751704",
         message);
@@ -212,7 +222,7 @@ function loadPostsNoDataStartOfRange(assert, limit, specificValidation){
     limit,
     objectId, groupString, 
     function (error, posts){
-      assert.equal(error, null, "error property is null");
+      ensureErrorIsNull(error, assert);
       var message = "the ID for each result matches";
       assert.equal(posts[0].id, "9973986703_10150512334081704",
         message);
