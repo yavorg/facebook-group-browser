@@ -17,6 +17,8 @@ function ensurePostsAreNull(posts, assert){
   assert.equal(posts, null, "posts are null");
 }
 
+QUnit.module("loadObjectId");
+
 QUnit.test("loadObjectId returns correct ID for group", function(assert) {
   var done = assert.async();
   loadObjectId("شباب 6 ابريل .. APRIL 6 YOUTH MOVEMENT", groupString, 
@@ -49,6 +51,8 @@ QUnit.test("loadObjectId errors with incorrect object name", function(assert) {
     }
   );
 });
+
+QUnit.module("filterOutPostsOlderThanDate");
 
 QUnit.test("filterOutPostsOlderThanDate handles empty array", function(assert) {
   var result = filterOutPostsOlderThanDate([], new Date());
@@ -103,6 +107,8 @@ QUnit.test(
     assert.deepEqual(result, filterOutPostsOlderThanDateOddInput, 
       "returns correct subset of array elements");
 });
+
+QUnit.module("loadPosts");
 
 QUnit.test(
   "loadPosts validates its startDate input",
