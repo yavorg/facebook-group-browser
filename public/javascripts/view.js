@@ -6,7 +6,7 @@ $(function () {
   } else {
     TraceKit.remoteFetching = false;
     TraceKit.report.subscribe(function logger(errorReport) { 
-      ga('send', 'event', 'clientError', errorReport);
+      ga('send', 'event', 'clientError', JSON.stringify(errorReport));
     });
   }
 
